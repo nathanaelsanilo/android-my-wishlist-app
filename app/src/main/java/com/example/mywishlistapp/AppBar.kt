@@ -19,12 +19,11 @@ fun AppBarView(
     title: String,
     onBackNavClick: () -> Unit = {}
 ) {
-    val isWishlistScreen : Boolean = title.uppercase().contains("WISHLIST")
-    val navigationIcon: (@Composable () -> Unit)? = {
+    val isWishlistScreen: Boolean = title.uppercase().contains("WISHLIST")
+    val navigationIcon: (@Composable () -> Unit)? =
         if (!isWishlistScreen) {
-            NavigationIcon(onBackNavClick)
-        }
-    }
+            { NavigationIcon(onBackNavClick) }
+        } else null
 
     TopAppBar(
         title = {
