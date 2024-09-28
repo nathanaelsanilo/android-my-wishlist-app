@@ -1,6 +1,5 @@
 package com.example.mywishlistapp
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -22,12 +21,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.mywishlistapp.data.Wish
 import com.example.mywishlistapp.data.WishDummy
 
 // Scaffold: structure of the apps (layout)
 @Composable
-fun HomeView() {
+fun HomeView(navController: NavController) {
     val context = LocalContext.current
     Scaffold(
         topBar = {
@@ -37,7 +37,9 @@ fun HomeView() {
         },
 
         floatingActionButton = {
-            FabAdd(context)
+            FabAdd(onClick = {
+                navController.navigate(Screen.AddScreen.route)
+            })
         }
 
     ) {
@@ -54,11 +56,9 @@ fun HomeView() {
 }
 
 @Composable
-fun FabAdd(context: Context) {
+fun FabAdd(onClick: () -> Unit) {
     FloatingActionButton(
-        onClick = {
-            Toast.makeText(context, "FAB Works!", Toast.LENGTH_LONG).show()
-        },
+        onClick = onClick,
         modifier = Modifier.padding(all = 20.dp),
         contentColor = Color.White,
         backgroundColor = Color.Black,

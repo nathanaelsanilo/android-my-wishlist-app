@@ -14,7 +14,10 @@ fun Navigation(
 ) {
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
         composable(Screen.HomeScreen.route) {
-            HomeView()
+            HomeView(navController)
+        }
+        composable(Screen.AddScreen.route) {
+            FormView(id = 0L, viewModel = viewModel, navController = navController)
         }
     }
 }
