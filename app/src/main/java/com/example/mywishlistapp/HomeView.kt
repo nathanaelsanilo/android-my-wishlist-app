@@ -1,6 +1,5 @@
 package com.example.mywishlistapp
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,11 +29,7 @@ import com.example.mywishlistapp.data.WishDummy
 fun HomeView(navController: NavController) {
     val context = LocalContext.current
     Scaffold(
-        topBar = {
-            AppBarView("Wishlist", {
-                Toast.makeText(context, "Back Navigation Works!", Toast.LENGTH_LONG).show()
-            })
-        },
+        topBar = { AppBarView(title = "Wishlist") },
 
         floatingActionButton = {
             FabAdd(onClick = {

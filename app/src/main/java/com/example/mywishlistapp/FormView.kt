@@ -31,7 +31,10 @@ fun FormView(id: Long, viewModel: WishViewModel, navController: NavController) {
     Scaffold(
         topBar = {
             AppBarView(
-                title = stringResource(buildButtonLabel(id))
+                title = stringResource(buildButtonLabel(id)),
+                onBackNavClick = {
+                    navController.navigateUp()
+                }
             )
         }
     ) {
