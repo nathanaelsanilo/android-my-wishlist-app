@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,10 +34,19 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun FormView(id: Long, viewModel: WishViewModel, navController: NavController) {
-
+    val createFlag = -1L
     val snackMessage = remember { mutableStateOf("") }
     val scope = rememberCoroutineScope() // create coroutine scope to call suspending function
     val scaffoldState = rememberScaffoldState()
+
+    if (id == createFlag) {
+        viewModel.setTitle("")
+        viewModel.setDescription("")
+    } else {
+        val detail = viewModel.getWishById(id).collectAsState(initial = Wish())
+        viewModel.setTitle(detail.value.title)
+        viewModel.setDescription(detail.value.description)
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -86,7 +96,7 @@ fun FormView(id: Long, viewModel: WishViewModel, navController: NavController) {
 
                     scope.launch {
                         // show snackbar
-                        scaffoldState.snackbarHostState.showSnackbar(snackMessage.value)
+                        // scaffoldState.snackbarHostState.showSnackbar(snackMessage.value)
 
                         // navigate back
                         navController.navigateUp()
@@ -127,8 +137,8 @@ fun BaseTextField(label: String, value: String, onValueChange: (String) -> Unit)
     )
 }
 
-fun buildButtonLabel(id: Long = 0L): Int {
-    if (id == 0L) {
+fun buildButtonLabel(id: Long = -1L): Int {
+    if (id != -1L) {
         return (R.string.update_wish)
     }
 

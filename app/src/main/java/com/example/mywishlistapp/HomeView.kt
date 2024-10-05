@@ -33,7 +33,7 @@ fun HomeView(navController: NavController, viewModel: WishViewModel) {
 
         floatingActionButton = {
             FabAdd(onClick = {
-                navController.navigate(Screen.AddScreen.route)
+                navController.navigate(Screen.AddScreen.route + "/-1L")
             })
         }
 
@@ -45,8 +45,11 @@ fun HomeView(navController: NavController, viewModel: WishViewModel) {
                 .fillMaxSize()
                 .padding(it)
         ) {
-            items(wishes.value) { wish ->
-                WishItem(wish, { /** TODO */ })
+            items(wishes.value) { wishItem ->
+                WishItem(wish = wishItem) {
+                    val wishId: Long = wishItem.id
+                    navController.navigate(Screen.AddScreen.route + "/$wishId")
+                }
             }
         }
     }
