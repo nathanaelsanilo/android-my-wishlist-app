@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -22,11 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mywishlistapp.data.Wish
-import com.example.mywishlistapp.data.WishDummy
 
 // Scaffold: structure of the apps (layout)
 @Composable
-fun HomeView(navController: NavController) {
+fun HomeView(navController: NavController, viewModel: WishViewModel) {
     val context = LocalContext.current
     Scaffold(
         topBar = { AppBarView(title = "Wishlist") },
@@ -38,12 +38,14 @@ fun HomeView(navController: NavController) {
         }
 
     ) {
+        // get all wishes from database through viewModel
+        val wishes = viewModel.getAllWishes.collectAsState(initial = listOf())
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
         ) {
-            items(WishDummy.wishes) { wish ->
+            items(wishes.value) { wish ->
                 WishItem(wish, { /** TODO */ })
             }
         }
