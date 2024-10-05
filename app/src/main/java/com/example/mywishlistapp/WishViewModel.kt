@@ -38,7 +38,7 @@ class WishViewModel(private val wishRepository: WishRepository = Graph.wishRepos
         }
     }
 
-    suspend fun updateWish(entity: Wish) {
+    fun updateWish(entity: Wish) {
         viewModelScope.launch(Dispatchers.IO) {
             wishRepository.update(entity)
         }

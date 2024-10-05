@@ -91,7 +91,13 @@ fun FormView(id: Long, viewModel: WishViewModel, navController: NavController) {
                         )
                         snackMessage.value = "Success"
                     } else {
-                        // TODO: update wish
+                        viewModel.updateWish(
+                            Wish(
+                                id = id,
+                                title = viewModel.title.value.trim(),
+                                description = viewModel.description.value.trim()
+                            )
+                        )
                     }
 
                     scope.launch {
