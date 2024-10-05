@@ -5,6 +5,8 @@ import androidx.room.Room
 import com.example.mywishlistapp.data.WishDatabase
 import com.example.mywishlistapp.data.WishRepository
 
+// object: use to define a singleton object
+// this object focus on the initialization of database
 object Graph {
     lateinit var database: WishDatabase
 
