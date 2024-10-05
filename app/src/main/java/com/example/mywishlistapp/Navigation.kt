@@ -17,7 +17,7 @@ fun Navigation(
             HomeView(navController)
         }
         composable(Screen.AddScreen.route) {
-            FormView(id = 0L, viewModel = viewModel, navController = navController)
+            FormView(id = -1, viewModel = viewModel, navController = navController)
         }
     }
 }

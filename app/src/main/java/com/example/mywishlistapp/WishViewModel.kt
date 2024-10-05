@@ -27,7 +27,7 @@ class WishViewModel(private val wishRepository: WishRepository = Graph.wishRepos
         }
     }
 
-    suspend fun addWish(entity: Wish) {
+    fun addWish(entity: Wish) {
         // use view model scope because we are calling the suspending function
         // Dispatcher.IO -> choosing which thread that will be used for this coroutine scope
         // can be use to optimize Input/Output operation like creating or reading to/from database

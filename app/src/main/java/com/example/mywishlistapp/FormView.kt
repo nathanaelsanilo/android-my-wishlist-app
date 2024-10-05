@@ -13,7 +13,11 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,11 +28,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.mywishlistapp.data.Wish
+import kotlinx.coroutines.launch
 
 @Composable
 fun FormView(id: Long, viewModel: WishViewModel, navController: NavController) {
 
+    val snackMessage = remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope() // create coroutine scope to call suspending function
+    val scaffoldState = rememberScaffoldState()
+
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             AppBarView(
                 title = stringResource(buildButtonLabel(id)),
@@ -59,10 +70,30 @@ fun FormView(id: Long, viewModel: WishViewModel, navController: NavController) {
 
             Spacer(modifier = Modifier.height(10.dp))
             Button(onClick = {
-                if (shouldEdit(viewModel)) {
-                    // TODO: handle edit wish
+                if (validate(viewModel)) {
+                    // if new then create
+                    if (id == -1L) {
+                        viewModel.addWish(
+                            Wish(
+                                title = viewModel.title.value.trim(),
+                                description = viewModel.description.value.trim()
+                            )
+                        )
+                        snackMessage.value = "Success"
+                    } else {
+                        // TODO: update wish
+                    }
+
+                    scope.launch {
+                        // show snackbar
+                        scaffoldState.snackbarHostState.showSnackbar(snackMessage.value)
+
+                        // navigate back
+                        navController.navigateUp()
+                    }
                 } else {
-                    // TODO: handle add new wish
+                    // display validation error
+                    snackMessage.value = "Validation error"
                 }
             }) {
                 Text(
@@ -96,7 +127,7 @@ fun BaseTextField(label: String, value: String, onValueChange: (String) -> Unit)
     )
 }
 
-fun buildButtonLabel(id: Long = 0L) : Int {
+fun buildButtonLabel(id: Long = 0L): Int {
     if (id == 0L) {
         return (R.string.update_wish)
     }
@@ -104,6 +135,6 @@ fun buildButtonLabel(id: Long = 0L) : Int {
     return R.string.add_wish
 }
 
-fun shouldEdit(viewModel: WishViewModel): Boolean {
+fun validate(viewModel: WishViewModel): Boolean {
     return viewModel.title.value.isNotEmpty() && viewModel.description.value.isNotEmpty()
 }
