@@ -48,7 +48,7 @@ class WishViewModel(private val wishRepository: WishRepository = Graph.wishRepos
         return wishRepository.findById(id)
     }
 
-    suspend fun deleteWish(entity: Wish) {
+    fun deleteWish(entity: Wish) {
         viewModelScope.launch(Dispatchers.IO) {
             wishRepository.delete(entity)
         }

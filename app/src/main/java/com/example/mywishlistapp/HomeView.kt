@@ -8,12 +8,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -25,6 +31,7 @@ import androidx.navigation.NavController
 import com.example.mywishlistapp.data.Wish
 
 // Scaffold: structure of the apps (layout)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeView(navController: NavController, viewModel: WishViewModel) {
     val context = LocalContext.current
@@ -45,10 +52,32 @@ fun HomeView(navController: NavController, viewModel: WishViewModel) {
                 .fillMaxSize()
                 .padding(it)
         ) {
-            items(wishes.value) { wishItem ->
-                WishItem(wish = wishItem) {
-                    val wishId: Long = wishItem.id
-                    navController.navigate(Screen.AddScreen.route + "/$wishId")
+            items(wishes.value, key = { item -> item.id }) { wishItem ->
+
+                // handle dismiss
+                val dismissState = rememberDismissState(
+                    confirmStateChange = { dismissValue ->
+                        if (dismissValue == DismissValue.DismissedToEnd ||
+                            dismissValue == DismissValue.DismissedToStart
+                        ) {
+                            // delete wish after dismiss
+                            viewModel.deleteWish(wishItem)
+                        }
+                        true// = return true
+                    }
+                )
+
+                // Composable swipe to dismiss
+                SwipeToDismiss(
+                    state = dismissState,
+                    background = {},
+                    directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
+                    dismissThresholds = { FractionalThreshold(0.25f) },
+                ) {
+                    WishItem(wish = wishItem) {
+                        val wishId: Long = wishItem.id
+                        navController.navigate(Screen.AddScreen.route + "/$wishId")
+                    }
                 }
             }
         }
